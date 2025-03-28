@@ -15,8 +15,11 @@ namespace WinDirStat.Net.Model.Drives {
 		/// <summary>Selected drives are scanned.</summary>
 		[Description("Individual Drives")]
 		Individual,
-		/// <summary>A folder path is scanned.</summary>
-		[Description("A Folder")]
-		Folder,
-	}
+        /// <summary>A folder path is scanned.</summary>
+        [Description("A Folder")]
+        Folder,
+        /// <summary>A folder path is scanned.</summary>
+        [Description("A Sqlite file")]
+        Sqlite,
+    }
 }

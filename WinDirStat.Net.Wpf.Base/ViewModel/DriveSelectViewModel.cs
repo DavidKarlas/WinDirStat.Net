@@ -44,10 +44,12 @@ namespace WinDirStat.Net.ViewModel {
 		public ObservableCollection<DriveItemViewModel> SelectedDrives { get; }
 		/// <summary>The current folder path.</summary>
 		private string folderPath;
+        /// <summary>The current sqlite path.</summary>
+        private string sqlitePath;
 
-		// State
-		/// <summary>The result of the drive selection.</summary>
-		private DriveSelectResult result;
+        // State
+        /// <summary>The result of the drive selection.</summary>
+        private DriveSelectResult result;
 		/// <summary>True if the current mode's selection is valid.</summary>
 		private bool validSelection;
 		
@@ -111,10 +113,23 @@ namespace WinDirStat.Net.ViewModel {
 					OnPropertyChanged();
 				}
 			}
-		}
+        }
 
-		/// <summary>Gets or sets if the current selection is valid.</summary>
-		public bool IsValidSelection {
+        /// <summary>Gets or sets the current folder path.</summary>
+        public string SqlitePath {
+            get => sqlitePath;
+            set {
+                if (sqlitePath != value) {
+                    sqlitePath = value;
+                    if (mode == DriveSelectMode.Sqlite)
+                        ValidateSelection();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>Gets or sets if the current selection is valid.</summary>
+        public bool IsValidSelection {
 			get => validSelection;
 			private set {
 				if (validSelection != value) {
@@ -151,7 +166,19 @@ namespace WinDirStat.Net.ViewModel {
 					IsValidSelection = false;
 				}
 				break;
-			}
+                case DriveSelectMode.Sqlite:
+                    try {
+                        if(string.IsNullOrEmpty(sqlitePath)) {
+                            IsValidSelection = false;
+                            return;
+                        }
+                        IsValidSelection = File.Exists(Path.GetFullPath(sqlitePath));
+                    }
+                    catch {
+                        IsValidSelection = false;
+                    }
+                    break;
+            }
 		}
 
 		#endregion

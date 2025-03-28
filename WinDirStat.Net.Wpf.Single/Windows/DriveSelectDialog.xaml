@@ -34,12 +34,12 @@
     </i:EventTrigger>
   </i:Interaction.Triggers>
   <Grid>
-    <RadioButton x:Name="buttonAllLocalDrives" Content="_All Local Drives" GroupName="DriveSelect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"
+    <RadioButton IsEnabled="False" x:Name="buttonAllLocalDrives" Content="_All Local Drives" GroupName="DriveSelect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"
                      IsChecked="{Binding Mode, Converter={conv:RadioButtonConverter}, ConverterParameter=All}"/>
-    <RadioButton x:Name="buttonIndividualDrives" Content="_Individual Drives" GroupName="DriveSelect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,49,0,0"
+        <RadioButton IsEnabled="False" x:Name="buttonIndividualDrives" Content="_Individual Drives" GroupName="DriveSelect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,49,0,0"
                      IsChecked="{Binding Mode, Converter={conv:RadioButtonConverter}, ConverterParameter=Individual}"/>
 
-    <sort:SortListView x:Name="list" Margin="10,69,10,61" local:ListSettings.InactiveSelection="False"
+        <sort:SortListView  IsEnabled="False" x:Name="list" Margin="10,69,10,91" local:ListSettings.InactiveSelection="False"
                            SortMode="{Binding DriveComparer.Mode}" SortDirection="{Binding DriveComparer.Direction}"
                            ff:MultiSelectorBehaviors.SynchronizedSelectedItems="{Binding SelectedDrives}"
                            ItemsSource="{Binding Drives}">
@@ -71,14 +71,20 @@
         </sort:SortView>
       </sort:SortListView.View>
     </sort:SortListView>
-    
-    <RadioButton x:Name="buttonAFolder" Content="A _Folder" GroupName="DriveSelect" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,35"
+
+        <RadioButton  IsEnabled="False" x:Name="buttonAFolder" Content="A _Folder" GroupName="DriveSelect" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,75"
                      IsChecked="{Binding Mode, Converter={conv:RadioButtonConverter}, ConverterParameter=Folder}"/>
 
-    <TextBox x:Name="textBoxFolder" Text="{Binding FolderPath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Margin="10,0,90,10" Height="23" BorderBrush="#FF828790" VerticalContentAlignment="Center" />
-    <Button x:Name="buttonBrowseFolder" Content="..." VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,11" Height="21" Width="73" Command="{Binding SelectFolder}"/>
+        <TextBox  IsEnabled="False" x:Name="textBoxFolder" Text="{Binding FolderPath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Margin="10,0,90,50" Height="23" BorderBrush="#FF828790" VerticalContentAlignment="Center" />
+        <Button  IsEnabled="False" x:Name="buttonBrowseFolder" Content="..." VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,51" Height="21" Width="73" Command="{Binding SelectFolder}"/>
 
-    <Button x:Name="buttonOK" Content="OK" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,10,0" Height="21" Width="73" IsDefault="True" Click="OnOK" Command="{Binding OK}" IsEnabled="{Binding IsValidSelection}"/>
+    <RadioButton x:Name="buttonSqlite" Content="A _Sqlite" GroupName="DriveSelect" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,35"
+                    IsChecked="{Binding Mode, Converter={conv:RadioButtonConverter}, ConverterParameter=Sqlite}"/>
+
+    <TextBox x:Name="textBoxSqlite" Text="{Binding SqlitePath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Margin="10,0,90,10" Height="23" BorderBrush="#FF828790" VerticalContentAlignment="Center" />
+    <Button x:Name="buttonBrowseSqlite" Content="..." VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,11" Height="21" Width="73" Command="{Binding SelectSqlite}"/>
+
+        <Button x:Name="buttonOK" Content="OK" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,10,0" Height="21" Width="73" IsDefault="True" Click="OnOK" Command="{Binding OK}" IsEnabled="{Binding IsValidSelection}"/>
     <Button x:Name="buttonCancel" Content="Cancel" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,39,10,0" Height="21" Width="73" IsCancel="True"/>
   </Grid>
 </Window>

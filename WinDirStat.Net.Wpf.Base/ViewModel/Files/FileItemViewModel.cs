@@ -129,19 +129,31 @@ namespace WinDirStat.Net.ViewModel.Files {
 					return Model.Percent;
 				return 0d;
 			}
-		}
+        }
 
-		/// <summary>
-		/// Gets the local time of when the file was last written to.<para/>
-		/// If this is a container, it returns the most recent time of all children.
-		/// </summary>
-		public DateTime LastWriteTime => Model.LastWriteTime;
+        /// <summary>
+        /// Gets the local time of when the file was last written to.<para/>
+        /// If this is a container, it returns the most recent time of all children.
+        /// </summary>
+        public DateTime LastWriteTime => Model.LastWriteTime;
 
-		/// <summary>
-		/// Gets the number of files and directories this folder contains. Returns -1 if this is not a
-		/// container.
-		/// </summary>
-		public int ItemCount => Model.ItemCount;
+        /// <summary>
+        /// Gets the local time of when the file was last written to.<para/>
+        /// If this is a container, it returns the most recent time of all children.
+        /// </summary>
+        public DateTime LastAccessTime => Model.LastAccessTime;
+
+        /// <summary>
+        /// Gets the local time of when the file was last written to.<para/>
+        /// If this is a container, it returns the most recent time of all children.
+        /// </summary>
+        public DateTime CreationTime => Model.CreationTime;
+
+        /// <summary>
+        /// Gets the number of files and directories this folder contains. Returns -1 if this is not a
+        /// container.
+        /// </summary>
+        public int ItemCount => Model.ItemCount;
 		/// <summary>
 		/// Gets the number of files this folder contains. Returns -1 if this is not a container.
 		/// </summary>
@@ -234,7 +246,8 @@ namespace WinDirStat.Net.ViewModel.Files {
 					if (cacheMode >= IconCacheMode.Individual) {
                         UI.BeginInvoke(() => {
                             var namedIcon = IconCache.CacheIconAndDisplayName(FullName);
-                            OnCacheFileIcon(namedIcon.Icon);
+                            if (namedIcon != null)
+                                OnCacheFileIcon(namedIcon.Icon);
                         }, false);
                     }
 					else if (ExtensionItem.CacheState != IconCacheState.Cached) {
@@ -252,7 +265,8 @@ namespace WinDirStat.Net.ViewModel.Files {
                     if (cacheMode >= IconCacheMode.Individual) {
                         UI.BeginInvoke(() => {
                             var namedIcon = IconCache.CacheIconAndDisplayName(FullName);
-                            OnCacheFolderIcon(namedIcon.Icon);
+                            if (namedIcon != null)
+                                OnCacheFolderIcon(namedIcon.Icon);
                         }, false);
                     }
 				break;

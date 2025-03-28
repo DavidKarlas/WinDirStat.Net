@@ -8,16 +8,18 @@ namespace WinDirStat.Net.ViewModel {
 		public IRelayCommand OK => GetCommand(OnOK);
 
 		public IRelayCommand SelectFolder => GetCommand(OnSelectFolder);
+		public IRelayCommand SelectSqlite => GetCommand(OnSelectSqlite);
 
-		private void OnOK() {
+        private void OnOK() {
 			// Apply the settings for future use
 			Settings.DriveSelectMode = mode;
 			Settings.SelectedDrives = SelectedDrives.Select(d => d.Name).ToArray();
 			Settings.SelectedFolderPath = folderPath;
-			Result = new DriveSelectResult(Scanning,
+            Result = new DriveSelectResult(Scanning,
 										   Settings.DriveSelectMode,
 										   Settings.SelectedDrives,
-										   Settings.SelectedFolderPath);
+										   Settings.SelectedFolderPath,
+                                           sqlitePath);
 		}
 
 		private void OnSelectFolder() {
@@ -27,5 +29,13 @@ namespace WinDirStat.Net.ViewModel {
 			}
 		}
 
-	}
+        private void OnSelectSqlite() {
+            string newSqlite = Dialogs.ShowFileBrowser(WindowOwner, "WinDirStat.Net - Select SQLite");
+            if (newSqlite != null) {
+                SqlitePath = newSqlite;
+            }
+        }
+
+
+    }
 }

@@ -25,13 +25,15 @@ namespace WinDirStat.Net.Services {
 		/// <returns>The selected path on success, otherwise null.</returns>
 		string ShowFolderBrowser(Window owner, string description, bool showNewFolder, string selectedPath = "");
 
-		/// <summary>Shows a message with no icon.</summary>
-		/// 
-		/// <param name="owner">The owner window for this dialog message.</param>
-		/// <param name="message">The text message.</param>
-		/// <param name="title">The message window title.</param>
-		/// <param name="button">The message buttons to display.</param>
-		MessageBoxResult ShowMessage(Window owner, string message, string title, MessageBoxButton button = MessageBoxButton.OK);
+        string ShowFileBrowser(Window owner, string description, string selectedPath = null);
+
+        /// <summary>Shows a message with no icon.</summary>
+        /// 
+        /// <param name="owner">The owner window for this dialog message.</param>
+        /// <param name="message">The text message.</param>
+        /// <param name="title">The message window title.</param>
+        /// <param name="button">The message buttons to display.</param>
+        MessageBoxResult ShowMessage(Window owner, string message, string title, MessageBoxButton button = MessageBoxButton.OK);
 
 		/// <summary>Shows a message with an information icon.</summary>
 		/// 

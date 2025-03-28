@@ -486,6 +486,12 @@
               <sort:SortViewColumn Width="110" Header="Last Change"
                                                SortMode="LastWrite" DefaultSortDirection="Descending"
                                                CellBinding="{Binding LastWriteTime, Converter={conv:FileTimeFormatter}}"/>
+              <sort:SortViewColumn Width="110" Header="Last Access"
+                                               SortMode="LastAccess" DefaultSortDirection="Descending"
+                                               CellBinding="{Binding LastAccessTime, Converter={conv:FileTimeFormatter}}"/>
+              <sort:SortViewColumn Width="110" Header="Expiry Time"
+                                               SortMode="Creation" DefaultSortDirection="Descending"
+                                               CellBinding="{Binding CreationTime, Converter={conv:FileTimeFormatter}}"/>
               <sort:SortViewColumn Width="50" Header="Attributes"
                                               SortMode="Attributes"
                                               CellDataTemplate="{StaticResource AttributesTemplate}"/>

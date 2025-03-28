@@ -25,7 +25,8 @@ namespace WinDirStat.Net.Model.Drives {
 		public DriveSelectResult(ScanningService scanning,
 								 DriveSelectMode mode,
 								 string[] selectedDrives,
-								 string folderPath)
+								 string folderPath,
+                                 string sqlitePath)
 		{
 			this.scanning = scanning;
 			Mode = mode;
@@ -38,8 +39,15 @@ namespace WinDirStat.Net.Model.Drives {
 				selectedPaths = new[] {
 					folderPath ?? throw new ArgumentNullException(nameof(folderPath)),
 				};
-			}
-		}
+			} else if(mode == DriveSelectMode.Sqlite) {
+                selectedPaths = new[] {
+                    sqlitePath
+                };
+            }
+            else {
+                selectedPaths = null;
+            }
+        }
 
 		#endregion
 

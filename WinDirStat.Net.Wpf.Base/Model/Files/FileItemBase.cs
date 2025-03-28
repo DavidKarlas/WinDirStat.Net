@@ -44,8 +44,10 @@ namespace WinDirStat.Net.Model.Files {
 		/// If this is a container, it returns the most recent time of all children.
 		/// </summary>
 		public DateTime LastWriteTimeUtc { get; private protected set; }
-		/// <summary>Gets the name of the file.</summary>
-		public string Name { get; }
+		public DateTime LastAccessTimeUtc { get; private protected set; }
+		public DateTime CreationTimeUtc { get; private protected set; }
+        /// <summary>Gets the name of the file.</summary>
+        public string Name { get; }
 		/// <summary>Gets the total size of the file and all of its children.</summary>
 		public long Size { get; private protected set; }
 		/// <summary>Gets the rectangle of the file for drawing in the treemap.</summary>
@@ -103,7 +105,11 @@ namespace WinDirStat.Net.Model.Files {
 			: this(info.Name, type, flags)
 		{
 			LastWriteTimeUtc = info.LastWriteTimeUtc;
-			Attributes = info.Attributes;
+            CreationTimeUtc = info.CreationTimeUtc;
+            if(info.CreationTimeUtc> DateTime.MinValue)
+                Console.WriteLine();
+            LastAccessTimeUtc = info.LastAccessTimeUtc;
+            Attributes = info.Attributes;
 
 			if (!info.IsDirectory && !info.IsSymbolicLink)
 				Size = info.Size;
@@ -282,8 +288,11 @@ namespace WinDirStat.Net.Model.Files {
 		/// </summary>
 		public DateTime LastWriteTime => LastWriteTimeUtc.ToLocalTime();
 
-		/// <summary>Gets the visible level of the item in the tree.</summary>
-		public int VisibleLevel => Parent != null ? Parent.VisibleLevel + 1 : 0;
+        public DateTime LastAccessTime => LastAccessTimeUtc.ToLocalTime();
+        public DateTime CreationTime => CreationTimeUtc.ToLocalTime();
+
+        /// <summary>Gets the visible level of the item in the tree.</summary>
+        public int VisibleLevel => Parent != null ? Parent.VisibleLevel + 1 : 0;
 
 		/// <summary>Gets the file level of the item in the tree.</summary>
 		public int FileLevel => Parent != null ? (Parent.FileLevel + (Parent.IsFileType ? 1 : 0)) : 0;

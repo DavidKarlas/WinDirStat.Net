@@ -30,9 +30,10 @@ namespace WinDirStat.Net.Model.Files {
 		/// because they account for if <see cref="FileItemBase.EmptyChildren"/> is being used.
 		/// </summary>
 		protected volatile List<FileItemBase> children = EmptyChildren;
+        private volatile FolderItem _fileCollection;
 
-		/// <summary>Gets the number of files this folder contains.</summary>
-		public override sealed int FileCount { get; protected set; }
+        /// <summary>Gets the number of files this folder contains.</summary>
+        public override sealed int FileCount { get; protected set; }
 		/// <summary>Gets the number of directories this folder contains.</summary>
 		public override sealed int SubdirCount { get; protected set; }
 
@@ -311,13 +312,7 @@ namespace WinDirStat.Net.Model.Files {
 		public FolderItem GetFileCollection() {
 			if (Type == FileItemType.FileCollection)
 				return this;
-			int count = children.Count;
-			for (int i = 0; i < count; i++) {
-				FileItemBase child = children[i];
-				if (child.Type == FileItemType.FileCollection)
-					return (FolderItem) child;
-			}
-			return null;
+			return _fileCollection;
 		}
 
 		/// <summary>Gets the first file in this folder.</summary>
@@ -426,7 +421,7 @@ namespace WinDirStat.Net.Model.Files {
 		/// The container's first file. Keep track of this when scanning this directory.
 		/// </param>
 		public void AddItem(FileItemBase item, ref FolderItem fileCollection, ref FileItem firstFile) {
-			if (Type == FileItemType.FileCollection)
+            if (Type == FileItemType.FileCollection)
 				throw new InvalidOperationException($"Cannot call {nameof(AddItem)} from a File Collection!");
 
 			// We know we're adding an item to children, make sure it's setup
@@ -453,8 +448,9 @@ namespace WinDirStat.Net.Model.Files {
 						// We've hit our limit of only one visible file when a
 						// folder is storing non-files. Move to FileCollection.
 						fileCollection = new FolderItem();
-						Remove(firstFile);
-						Add(fileCollection);
+                        _fileCollection = fileCollection;
+                        Remove(firstFile);
+                        Add(fileCollection);
 						fileCollection.Add(firstFile);
 						fileCollection.Add(item);
 						fileCollection.Invalidate();
@@ -495,6 +491,7 @@ namespace WinDirStat.Net.Model.Files {
 					// Setup file collection if the folder needs to store a container item
 					Debug.Assert(fileCollection == null);
 					fileCollection = new FolderItem();
+                    _fileCollection = fileCollection;
 					List<FileItemBase> files = ClearAndGetFiles();
 					Add(fileCollection);
 					fileCollection.AddRange(files);
@@ -701,8 +698,11 @@ namespace WinDirStat.Net.Model.Files {
 		protected void Add(FileItemBase item) {
 			//EnsureChildren();
 			int index = children.Count;
+            if(item.Type == FileItemType.FileCollection && _fileCollection == null)
+                Console.WriteLine();
+
 			children.Add(item);
-			item.Parent = this;
+            item.Parent = this;
 			if (IsWatched)
 				RaiseChanged(FileItemAction.ChildrenAdded, item, index);
 		}
@@ -927,10 +927,14 @@ namespace WinDirStat.Net.Model.Files {
 					DirectoryInfo directoryInfo = new DirectoryInfo(FullName);
 					// Use the directory's LastWriteTime when empty
 					LastWriteTimeUtc = directoryInfo.LastWriteTimeUtc;
+                    LastAccessTimeUtc = directoryInfo.LastAccessTimeUtc;
+                    CreationTimeUtc = directoryInfo.CreationTimeUtc;
 				}
 				else {
 					LastWriteTimeUtc = DateTime.MinValue;
-				}
+                    LastAccessTimeUtc = DateTime.MinValue;
+                    CreationTimeUtc = DateTime.MinValue;
+                }
 				if (IsWatched)
 					RaiseChanged(FileItemAction.ValidatedSortOrder);
 				IsValidating = false;
@@ -940,8 +944,10 @@ namespace WinDirStat.Net.Model.Files {
 			// True, if any of the sort orders that can change, have changed
 			bool sortOrderChanged = false;
 			long oldSize = Size;
-			DateTime oldLastChangeTime = LastWriteTimeUtc;
-			bool thisIsDone = IsDone;
+            DateTime oldLastChangeTime = LastWriteTimeUtc;
+            DateTime oldLastAccessTimeUtc = LastAccessTimeUtc;
+            DateTime oldCreationTimeUtc = CreationTimeUtc;
+            bool thisIsDone = IsDone;
 			bool isDone = true;
 			
 			lock (children) {
@@ -973,7 +979,9 @@ namespace WinDirStat.Net.Model.Files {
 					Size += child.Size;
 					//LastAccessTime = Max(LastAccessTime, child.LastAccessTime);
 					LastWriteTimeUtc = MaxDateTime(LastWriteTimeUtc, child.LastWriteTimeUtc);
-					if (child.Type == FileItemType.File || child.Type == FileItemType.FreeSpace) {
+					LastAccessTimeUtc = MaxDateTime(LastAccessTimeUtc, child.LastAccessTimeUtc);
+					CreationTimeUtc = MaxDateTime(CreationTimeUtc, child.CreationTimeUtc);
+                    if (child.Type == FileItemType.File || child.Type == FileItemType.FreeSpace) {
 						FileCount++;
 					}
 					else {
@@ -1004,7 +1012,7 @@ namespace WinDirStat.Net.Model.Files {
 				else
 					RaiseChanged(FileItemAction.Validated);
 			}
-			return sortOrderChanged || (oldLastChangeTime != LastWriteTimeUtc);
+			return sortOrderChanged || (oldLastChangeTime != LastWriteTimeUtc) || (oldLastAccessTimeUtc != LastAccessTimeUtc) || (oldCreationTimeUtc != CreationTimeUtc);
 		}
 
 		/// <summary>Fully validates the file item tree and prepares it for use.</summary>
