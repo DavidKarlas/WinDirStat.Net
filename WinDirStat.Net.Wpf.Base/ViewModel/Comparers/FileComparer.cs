@@ -57,9 +57,9 @@ namespace WinDirStat.Net.ViewModel.Comparers {
 			case FileSortMode.Files: return SortByFiles;
 			case FileSortMode.Subdirs: return SortBySubdirs;
 			case FileSortMode.LastWrite: return SortByLastWrite;
-			//case FileSortMode.LastAccess: return SortByLastAccess;
-			//case FileSortMode.Creation: return SortByCreation;
-			case FileSortMode.Attributes: return SortByAttributes;
+            case FileSortMode.LastAccess: return SortByLastAccess;
+            case FileSortMode.Creation: return SortByCreation;
+                case FileSortMode.Attributes: return SortByAttributes;
 			default:
 				throw new ArgumentException($"Invalid {typeof(FileSortMode).Name} ({mode})!", nameof(mode));
 			}
@@ -94,11 +94,18 @@ namespace WinDirStat.Net.ViewModel.Comparers {
 		}
 		private static int SortByAttributes(FileItemViewModel a, FileItemViewModel b) {
 			return a.Model.SortAttributes.CompareTo(b.Model.SortAttributes);
-		}
-		private static int SortByLastWrite(FileItemViewModel a, FileItemViewModel b) {
-			return a.Model.LastWriteTimeUtc.CompareTo(b.Model.LastWriteTimeUtc);
-		}
+        }
+        private static int SortByLastWrite(FileItemViewModel a, FileItemViewModel b) {
+            return a.Model.LastWriteTimeUtc.CompareTo(b.Model.LastWriteTimeUtc);
+        }
 
-		#endregion
-	}
+        private static int SortByLastAccess(FileItemViewModel a, FileItemViewModel b) {
+            return a.Model.LastAccessTimeUtc.CompareTo(b.Model.LastAccessTimeUtc);
+        }
+
+        private static int SortByCreation(FileItemViewModel a, FileItemViewModel b) {
+            return a.Model.CreationTimeUtc.CompareTo(b.Model.CreationTimeUtc);
+        }
+        #endregion
+    }
 }

@@ -9,6 +9,10 @@
 		<LangVersion>latest</LangVersion>
         <ApplicationIcon>Resources\App.ico</ApplicationIcon>
         <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
+
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>true</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	</PropertyGroup>
 	<ItemGroup>
         <Resource Include="Resources\App.ico" />

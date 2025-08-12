@@ -14,8 +14,8 @@ namespace WinDirStat.Net.Wpf.Converters {
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 			try {
 				DateTime dt = (DateTime) value;
-				if (dt == DateTime.MinValue)
-					return "";
+				if (dt.ToUniversalTime() == DateTime.MinValue)
+					return "Never";
 				string shortDateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
 				string dtFormatted = dt.ToString(shortDateFormat.Replace("yyyy", "yy"));
 				return $"{dtFormatted} {dt.ToShortTimeString()}";

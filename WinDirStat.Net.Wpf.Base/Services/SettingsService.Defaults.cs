@@ -48,7 +48,7 @@ namespace WinDirStat.Net.Services {
 		/// <summary>Resets the settings to their defaults.</summary>
 		public void Reset() {
 			// Drive Select
-			DriveSelectMode = DriveSelectMode.Individual;
+			DriveSelectMode = DriveSelectMode.Sqlite;
 			SelectedDrives = new[] { @"C:\" };
 			SelectedFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
